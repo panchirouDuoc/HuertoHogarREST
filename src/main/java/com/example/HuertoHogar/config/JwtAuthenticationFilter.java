@@ -22,8 +22,8 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final JwtService jwtService; // Inyectado por el constructor de Lombok
-    private final UserDetailsService userDetailsService; // Inyectado por el constructor de Lombok
+    private final JwtService jwtService; 
+    private final UserDetailsService userDetailsService;
 
     @Override
     protected void doFilterInternal(

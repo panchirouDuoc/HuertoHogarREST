@@ -4,6 +4,8 @@ import com.example.HuertoHogar.model.Usuario;
 import com.example.HuertoHogar.repository.UsuarioRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,13 +21,15 @@ public class UsuarioService {
     @Autowired
     private JwtService jwtService;
 
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
     public Usuario registerUser(Usuario usuario) {
         if (usuarioRepository.findByUsername(usuario.getUsername()).isPresent()) {
             throw new RuntimeException("El nombre de usuario ya está en uso");
         }
-        // Codificar la contraseña antes de guardarla
+
         usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
-        // Asignar rol por defecto
         if (usuario.getRol() == null || usuario.getRol().isEmpty()) {
             usuario.setRol("user");
         }
@@ -33,15 +37,14 @@ public class UsuarioService {
     }
 
     public String loginUser(String username, String password) {
-        Usuario usuario = usuarioRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(username, password)
+        );
 
-        if (passwordEncoder.matches(password, usuario.getPassword())) {
-            // Si la contraseña es correcta, genera un token
-            return jwtService.generateToken(usuario);
-        } else {
-            throw new RuntimeException("Credenciales inválidas");
-        }
+        Usuario usuario = usuarioRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado después de la autenticación"));
+        
+        return jwtService.generateToken(usuario);
     }
 
     public Usuario getUsuarioById(Long id) {
@@ -67,5 +70,21 @@ public class UsuarioService {
         } else {
             throw new RuntimeException("Usuario no encontrado");
         }
+    }
+
+    public Usuario updateUserProfile(Long id, Usuario profileDetails) {
+        Usuario existingUsuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con id: " + id));
+
+        existingUsuario.setNombre(profileDetails.getNombre());
+        existingUsuario.setApellido(profileDetails.getApellido());
+        existingUsuario.setEmail(profileDetails.getEmail());
+        existingUsuario.setDireccion(profileDetails.getDireccion());
+        existingUsuario.setTelefono(profileDetails.getTelefono());
+        if (profileDetails.getFoto() != null) {
+            existingUsuario.setFoto(profileDetails.getFoto());
+        }
+
+        return usuarioRepository.save(existingUsuario);
     }
 }

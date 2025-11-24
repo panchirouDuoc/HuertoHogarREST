@@ -21,8 +21,10 @@ public class ApplicationConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> usuarioRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
+        // Al especificar que el UserDetailsService devuelve tu clase Usuario,
+        // Spring sabrá cómo inyectarla correctamente con @AuthenticationPrincipal.
+        return (UserDetailsService) username -> usuarioRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado con el nombre: " + username));
     }
 
     @Bean

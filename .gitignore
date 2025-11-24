@@ -1,33 +1,32 @@
-HELP.md
+# Archivos de log
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Archivos de dependencias
+node_modules
+jspm_packages
+web_modules
+
+# Archivos generados por el build de Maven/Gradle
 target/
-.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+.mvn/
+build/
+out/
 
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-
-### IntelliJ IDEA ###
-.idea
-*.iws
+# Archivos de configuración de IDEs
+.idea/
+.vscode/
 *.iml
 *.ipr
+*.iws
+.project
+.classpath
+.settings/
 
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
-
-### VS Code ###
-.vscode/
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db

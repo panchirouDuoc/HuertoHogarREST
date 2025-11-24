@@ -362,3 +362,7 @@ VALUES ('Administrador', 'admin', 'admin@huerto.cl', '$2a$10$3s/3.m5q4vU2E.r0J29
 	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:491)
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
 	at java.base/java.lang.Thread.run(Unknown Source)
+2025-11-24 12:38:37.189733-03:00 jdbc[14]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Error de Sintaxis en sentencia SQL "SELECT * [*]FROMCARRITO_ITEMS"
+Syntax error in SQL statement "SELECT * [*]FROMCARRITO_ITEMS"; SQL statement:
+SELECT * FROMCARRITO_ITEMS [42000-232]

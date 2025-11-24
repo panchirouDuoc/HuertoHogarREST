@@ -1,4 +1,4 @@
-package com.example.HuertoHogar.service;
+package com.example.HuertoHogar.repository;
 
 import com.example.HuertoHogar.model.CarritoItem;
 import org.springframework.data.jpa.repository.JpaRepository;

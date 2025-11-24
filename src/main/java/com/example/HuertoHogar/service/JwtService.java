@@ -4,7 +4,6 @@ import com.example.HuertoHogar.model.Usuario;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -18,7 +17,6 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
-    // Clave secreta para firmar el token. En una app real, debería estar en application.properties
     private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
     public String generateToken(Usuario usuario) {
@@ -30,7 +28,7 @@ public class JwtService {
                 .setClaims(claims)
                 .setSubject(usuario.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10 horas de validez
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
                 .signWith(key).compact();
     }
 

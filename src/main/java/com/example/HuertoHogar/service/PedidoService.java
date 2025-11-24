@@ -27,13 +27,11 @@ public class PedidoService {
             throw new RuntimeException("El carrito está vacío. No se puede crear un pedido.");
         }
 
-        // 2. Crear un nuevo objeto Pedido
         Pedido pedido = new Pedido();
         pedido.setIdUsuario(idUsuario);
         pedido.setEstado(EstadoPedido.PENDIENTE);
         pedido.setTotal(carrito.getTotal());
 
-        // 3. Convertir CarritoItems a PedidoItems
         List<PedidoItem> pedidoItems = carrito.getItems().stream()
                 .map(carritoItem -> {
                     PedidoItem item = new PedidoItem();
@@ -47,10 +45,7 @@ public class PedidoService {
 
         pedido.setItems(pedidoItems);
 
-        // 4. Guardar el nuevo pedido en la base de datos
         Pedido pedidoGuardado = pedidoRepository.save(pedido);
-
-        // 5. Limpiar el carrito del usuario
         carritoService.limpiarCarrito(idUsuario);
 
         return pedidoGuardado;

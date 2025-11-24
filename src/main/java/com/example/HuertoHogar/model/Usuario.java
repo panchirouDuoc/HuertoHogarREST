@@ -1,15 +1,13 @@
 package com.example.HuertoHogar.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import java.util.Collections;
 
 import java.util.Collection;
 import java.util.List;
@@ -24,20 +22,28 @@ public class Usuario implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String nombre;
-    private String username; 
+    private String nombre; 
+    @Column(unique = true)
+    private String username;
     private String email;
     private String password;
     private String rol;
+    private String apellido;
+    private String direccion;
+    private String telefono;
+    @Lob
+    private String foto;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_" + rol));
+        if (rol == null || rol.trim().isEmpty()) {
+            return Collections.emptyList();
+        }
+        return List.of(new SimpleGrantedAuthority("ROLE_" + rol.toUpperCase()));
     }
 
     @Override
     public String getUsername() {
-        // El email será el "username" para Spring Security
         return username;
     }
 
