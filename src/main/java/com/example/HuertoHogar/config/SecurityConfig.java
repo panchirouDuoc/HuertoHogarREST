@@ -30,41 +30,50 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http
-        .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Usar nuestra configuración explícita
+        .cors(cors -> cors.configurationSource(corsConfigurationSource()))
         .csrf(csrf -> csrf.disable())
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(auth -> auth
             
-            .requestMatchers("/auth/**", "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/h2-console/**").permitAll()
+            .requestMatchers("/api/auth/**", "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/h2-console/**").permitAll()
             
-            //productos y categorias
-            .requestMatchers(HttpMethod.GET, "/api/productos/**", "/api/categorias/**").permitAll()
-            .requestMatchers(HttpMethod.DELETE, "/api/productos/**", "/api/categorias/**").hasRole("ADMIN")
-            .requestMatchers(HttpMethod.POST, "/api/productos/**", "/api/categorias/**").hasRole("ADMIN")
-            .requestMatchers(HttpMethod.PUT, "/api/productos/**", "/api/categorias/**").hasRole("ADMIN")
+            //categorias
+            .requestMatchers(HttpMethod.GET,"/api/categorias/**").permitAll()
+            .requestMatchers(HttpMethod.DELETE,"/api/categorias/**").hasAuthority("ROLE_ADMIN")
+            .requestMatchers(HttpMethod.POST,"/api/categorias/**").hasAuthority("ROLE_ADMIN")
+            .requestMatchers(HttpMethod.PUT,"/api/categorias/**").hasAuthority("ROLE_ADMIN")
+
+            //productos
+            .requestMatchers(HttpMethod.GET,"/api/productos/**").permitAll()
+            .requestMatchers(HttpMethod.DELETE,"/api/productos/**").hasAuthority("ROLE_ADMIN")
+            .requestMatchers(HttpMethod.POST,"/api/productos/**").hasAuthority("ROLE_ADMIN")
+            .requestMatchers(HttpMethod.PUT,"/api/productos/**").hasAuthority("ROLE_ADMIN")
 
             //pedidos
             .requestMatchers("/api/pedidos/**").authenticated()
-            .requestMatchers(HttpMethod.PUT, "/api/pedidos/{idPedido}/estado").hasRole("ADMIN")
+            .requestMatchers(HttpMethod.PUT, "/api/pedidos/{idPedido}/estado").hasAuthority("ROLE_ADMIN")
             
-            //carrito - Cualquier usuario autenticado puede gestionar su carrito
+            //carrito
             .requestMatchers(HttpMethod.GET, "/api/carrito").authenticated()
             .requestMatchers(HttpMethod.POST, "/api/carrito/agregar").authenticated()
-            .requestMatchers(HttpMethod.PUT, "/api/carrito/producto/**").authenticated()
+            .requestMatchers(HttpMethod.PUT, "/api/carrito/producto/**").authenticated() 
             .requestMatchers(HttpMethod.DELETE, "/api/carrito/**").authenticated()
 
             //formulario de contacto
             .requestMatchers(HttpMethod.POST, "/api/formularios").permitAll()
-            .requestMatchers(HttpMethod.GET, "/api/formularios").hasRole("ADMIN")
-            .requestMatchers(HttpMethod.DELETE, "/api/formularios/**").hasRole("ADMIN")
+            .requestMatchers(HttpMethod.GET, "/api/formularios").hasAuthority("ROLE_ADMIN")
+            .requestMatchers(HttpMethod.DELETE, "/api/formularios/**").hasAuthority("ROLE_ADMIN")
 
             //reseñas
             .requestMatchers(HttpMethod.GET, "/api/resenas").permitAll()
             .requestMatchers(HttpMethod.POST, "/api/resenas").permitAll()
+            .requestMatchers(HttpMethod.DELETE, "/api/resenas").hasAuthority("ROLE_ADMIN")
 
             //perfil de usuario
             .requestMatchers(HttpMethod.GET, "/api/perfil").authenticated()
             .requestMatchers(HttpMethod.PUT, "/api/perfil").authenticated()
+            .requestMatchers(HttpMethod.GET, "/api/auth/me").authenticated()
+
 
             
    

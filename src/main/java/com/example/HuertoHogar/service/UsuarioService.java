@@ -30,9 +30,13 @@ public class UsuarioService {
         }
 
         usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
-        if (usuario.getRol() == null || usuario.getRol().isEmpty()) {
-            usuario.setRol("user");
+
+        if ("admin".equalsIgnoreCase(usuario.getUsername())) {
+            usuario.setRol("ROLE_ADMIN");
+        } else if (usuario.getRol() == null || usuario.getRol().isEmpty()) {
+            usuario.setRol("ROLE_USER");
         }
+
         return usuarioRepository.save(usuario);
     }
 

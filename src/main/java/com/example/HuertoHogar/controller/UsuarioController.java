@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
+@RequestMapping("/api")
 public class UsuarioController {
 
     @Autowired
@@ -49,8 +50,12 @@ public class UsuarioController {
     public ResponseEntity<Usuario> updateUserProfile(
             @AuthenticationPrincipal Usuario currentUser,
             @RequestBody Usuario profileDetails) {
-        // Usamos el ID del usuario autenticado para asegurar que solo modifica su propio perfil.
         Usuario updatedUsuario = usuarioService.updateUserProfile(currentUser.getId(), profileDetails);
         return ResponseEntity.ok(updatedUsuario);
+    }
+
+    @GetMapping("/auth/me")
+    public ResponseEntity<Usuario> getAuthenticatedUser(@AuthenticationPrincipal Usuario usuario) {
+        return ResponseEntity.ok(usuario);
     }
 }
